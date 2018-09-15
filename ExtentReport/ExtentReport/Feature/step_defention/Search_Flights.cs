@@ -4,6 +4,7 @@ using ExtentReport.support;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using NUnit.Framework;
+using System.Threading;
 
 namespace ExtentReport
 {
@@ -19,44 +20,38 @@ namespace ExtentReport
         [Given(@"I selected ""(.*)"" tab")]
         public void GivenISelectedTab(string tab)
         {
-            string PageURL = Browser.webdriver.Url;
-            if (PageURL != Browser.BaseURL)
-            {
-                IWebElement FlightsTab = Browser.webdriver.FindElement(By.XPath("//*[@id='airli']/span"));
-                FlightsTab.Click();
-            }
+                IWebElement Tab = Browser.webdriver.FindElement(By.XPath($"//span[text()='{tab}']"));
+                Tab.Click();
         }
 
 
         [Given(@"I select ""(.*)"" trip")]
-        public void GivenISelectTrip(string p0)
+        public void GivenISelectTrip(string option)
         {
-            IWebElement TripType = Browser.webdriver.FindElement(By.XPath("//*[@id='flights-search-controls-root']/div/div/form/div[1]/div/label[2]"));
+            IWebElement TripType = Browser.webdriver.FindElement(By.XPath($"//input[@type='radio']/../../label[text()='{option}']"));
+            Browser.Wait(5);
             TripType.Click();
         }
 
 
-        [Given(@"I selected from ""(.*)""")]
-        public void GivenISelectedFrom(string p0)
+        [Given(@"I selected (From|To) ""(.*)""")]
+        public void GivenISelectedFrom(string trip, string dest)
         {
-            IWebElement From = Browser.webdriver.FindElement(By.Id("origin-fsc-search"));
-            if (From.Text != "")
-            {
-                From.Clear();
-            }
-            From.SendKeys("Cairo (CAI)");
+            IWebElement tripDest = Browser.webdriver.FindElement(By.XPath($"//label[text()='{trip}']/..//input[@type='text']"));
+            tripDest.Clear();
+            Browser.Wait(5);
+            tripDest.SendKeys(dest);
         }
 
-        [Given(@"I selected to ""(.*)""")]
-        public void GivenISelectedTo(string p0)
+        [Given(@"I select (Depart|Return) date ""(.*)""")]
+        public void GivenISelectDepartDate(string destDate,string date)
         {
-            IWebElement To = Browser.webdriver.FindElement(By.Id("destination-fsc-search"));
-            if (To.Text != "")
-            {
-                To.Clear();
-            }
-            To.SendKeys("Riyadh (RUH)");
+            IWebElement tripDest = Browser.webdriver.FindElement(By.XPath($"//label[text()='{destDate}']/..//input[@type='text']"));
+            tripDest.Clear();
+            tripDest.SendKeys(date);
+            Browser.Wait(5);
         }
+
 
         [Given(@"I select travellers ""(.*)""")]
         public void GivenISelectTravellers(string p0)
@@ -92,20 +87,26 @@ namespace ExtentReport
             Done.Click();
         }
 
-        [When(@"I press Search Flights ""(.*)""")]
-        public void WhenIPressSearchFlights(string p0)
+        [When(@"I press on ""(.*)"" button")]
+        public void WhenIPressSearchFlights(string button)
         {
-            IWebElement search = Browser.webdriver.FindElement(By.XPath("//*[@id='flights-search-controls-root']/div/div/form/div[3]/button"));
+            IWebElement search = Browser.webdriver.FindElement(By.XPath($"//button[text()='{button}']"));
             search.Click();
+            Browser.Wait(10);
         }
 
 
-        [Then(@"all available flights ""(.*)"" will appear")]
-        public void ThenAllAvailableFlightsWillAppear(string p0)
+        [Then(@"I should see ""(.*)""")]
+        public void ThenIShouldSee(string text)
         {
-            IWebElement el = Browser.webdriver.FindElement(By.XPath("//*[@id='flights-search-summary-root']/div/section/div[2]/div/p[2]/span"));
-            string travellers = el.Text;
-            Assert.AreEqual("3 travellers", travellers);
+            string val = Browser.webdriver.FindElement(By.XPath($"//*[contains(text(),'{text}')]")).Text;
+            Assert.AreEqual(val, text);
+        }
+
+        [When(@"I wait (.*) seconds")]
+        public void WhenIWaitSeconds(int number)
+        {
+            Thread.Sleep(number * 1000);
         }
     }
 }

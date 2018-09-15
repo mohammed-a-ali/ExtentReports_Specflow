@@ -123,10 +123,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Feature\search_flight.feature.cs">
+    <Compile Include="Feature\search_flights.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>search_flight.feature</DependentUpon>
+      <DependentUpon>search_flights.feature</DependentUpon>
     </Compile>
     <Compile Include="Feature\step_defention\Search_Flights.cs" />
     <Compile Include="support\CreateReport.cs" />
@@ -138,9 +138,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Default.srprofile" />
-    <None Include="Feature\search_flight.feature">
+    <None Include="Feature\search_flights.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>search_flight.feature.cs</LastGenOutput>
+      <LastGenOutput>search_flights.feature.cs</LastGenOutput>
     </None>
     <None Include="license" />
     <None Include="packages.config" />
